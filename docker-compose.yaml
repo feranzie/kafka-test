@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: confluentinc/cp-kafka:7.8.3
+    container_name: kafka
+    ports:
+      - "9092:9092"
+
+    environment:
+      KAFKA_KRAFT_MODE: 'true' # Enable KRaft mode
+
+      CLUSTER_ID: '1L6g7nGhU-eAKfL--X25wo' #random id 
+      KAFKA_NODE_ID: 1 # no of brokers
+
+      KAFKA_PROCESS_ROLES: broker,controller #tells kafka the node serves as a broer and controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093 #DEFINES WHICH NODES ARE CONTROLLERS that can vote on important cluster decisions
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 #no backup just one copy of data
+
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093 #tells kafka to open 2 doors one on port 9092 and another port for controller communication on 9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 #tells kafka the adress to advertise to clients
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER #specifies which listener is used for controller communication
+
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs #tells kafka where to store log files, data files, controlller metadata
+
+    volumes:
+      - kafka_kraft:/var/lib/kafka/data #configure volume for data persistence
+
+volumes:
+  kafka_kraft:
