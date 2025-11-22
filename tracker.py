@@ -12,7 +12,7 @@ consumer_config = {
 
 
 
-Consumer = Consumer(consumer_config)
+consumer = Consumer(consumer_config)
 
 #subscribe to the topic orders
 consumer.subscribe(['orders'])
